@@ -4,11 +4,11 @@ LABEL version="6.0"
 LABEL description="SANS Investigative Forensic Toolkit based on Ubuntu 22.04 LTS"
 LABEL maintainer="Corey Forman (github.com/digitalsleuth)"
 LABEL sift_release="v2024.11.14"
-ARG CAST_VERSION=0.15.8
+ARG CAST_VERSION=1.0.13
 ARG SIFT_USER=sansforensics
 ARG SIFT_DESCRIPTION="SANSForensics User"
 ARG SIFT_PASS="forensics"
-
+ARG TARGETARCH
 USER root
 
 WORKDIR /tmp
@@ -21,11 +21,12 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     touch /home/${SIFT_USER}/.Xauthority && \
     chown -R ${SIFT_USER}:${SIFT_USER} /home/${SIFT_USER} && \
     usermod -a -G sudo ${SIFT_USER} && \
-    echo "${SIFT_USER}:${SIFT_PASS}" | chpasswd && \
-    wget https://github.com/ekristen/cast/releases/download/v${CAST_VERSION}/cast-v${CAST_VERSION}-linux-amd64.deb && \
-    dpkg -i /tmp/cast-v${CAST_VERSION}-linux-amd64.deb && \
-    cast install --mode server --user ${SIFT_USER} sift && \
-    rm /tmp/cast-v${CAST_VERSION}-linux-amd64.deb
+    echo "${SIFT_USER}:${SIFT_PASS}" | chpasswd
+RUN wget https://github.com/ekristen/cast/releases/download/v${CAST_VERSION}/cast-v${CAST_VERSION}-linux-${TARGETARCH}.deb -O cast.deb && \
+    dpkg -i cast.deb
+RUN cast --help
+RUN cast install --mode=server --user ${SIFT_USER} teamdfir/sift-saltstack@v2026.04.21 || true
+#rm cast.deb
 
 RUN echo "UseDNS no" >> /etc/ssh/sshd_config && \
     echo "GSSAPIAuthentication no" >> /etc/ssh/sshd_config && \
