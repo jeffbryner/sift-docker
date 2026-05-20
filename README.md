@@ -1,3 +1,9 @@
+# sift-ai
+A docker build of the sift tools for use by ai
+
+`docker build -t sift-ai -f Dockerfile.ai .  `
+
+Based on :
 # sift-docker  
 A SANS SIFT Docker built on Ubuntu 20.04 and 22.04 LTS   
 
