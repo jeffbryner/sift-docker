@@ -28,10 +28,13 @@ RUN cast install --mode=server --user ${SIFT_USER} teamdfir/sift-saltstack@v2026
 #rm cast.deb
 
 # Install additional Python3 tools for AI after long-running cast install to ensure build efficiency
-RUN apt-get update && apt-get install -y python3-pip python3-venv && \
+RUN export DEBIAN_FRONTEND=noninteractive && \
+    apt-get clean && \
+    (apt-get update || true) && \
+    apt-get install -y python3-pip python3-venv ewf-tools xmount xfsprogs squashfs-tools libbde-utils libvshadow-utils && \
     python3 -m venv /opt/ai-tools && \
     /opt/ai-tools/bin/pip install --upgrade pip && \
-    /opt/ai-tools/bin/pip install volatility3 dissect imagemounter
+    /opt/ai-tools/bin/pip install volatility3 dissect imagemounter pytsk3 python-magic
 
 RUN git clone https://github.com/digitalsleuth/color_ssh_terminal /tmp/colorssh && \
     cd /tmp/colorssh && cat color_ssh_terminal >> /home/${SIFT_USER}/.bashrc && cd /tmp && rm -rf colorssh && \
