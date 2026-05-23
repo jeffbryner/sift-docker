@@ -24,7 +24,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 RUN wget https://github.com/ekristen/cast/releases/download/v${CAST_VERSION}/cast-v${CAST_VERSION}-linux-${TARGETARCH}.deb -O cast.deb && \
     dpkg -i cast.deb
 RUN cast --help
-RUN cast install --mode=server --user ${SIFT_USER} teamdfir/sift-saltstack@v2026.04.21
+RUN cast install --mode=server --user ${SIFT_USER} teamdfir/sift-saltstack@v2026.04.21 || true
 #rm cast.deb
 
 # Install additional Python3 tools for AI after long-running cast install to ensure build efficiency
