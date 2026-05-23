@@ -1,0 +1,17 @@
+---
+name: CustomWindowsLNKFiles
+doc: Custom artifact filter for Windows LNK files in common locations.
+sources:
+- type: FILE
+  attributes: 
+    paths:
+      - '%%users.homedir%%\AppData\Roaming\Microsoft\Windows\Recent\*.lnk'
+      - '%%users.homedir%%\Desktop\*.lnk'
+      - '%%users.homedir%%\Recent\*.lnk'
+      - '%%users.homedir%%\AppData\Roaming\Microsoft\Internet Explorer\Quick Launch\*.lnk'
+      - '%%users.homedir%%\AppData\Roaming\Microsoft\Office\Recent\*.lnk'
+      - '%%users.homedir%%\AppData\Roaming\Microsoft\Windows\Recent\*.lnk'
+      - '%%environ_allusersappdata%%\Microsoft\Windows\Start Menu\Programs\*.lnk'
+    separator: '\'
+labels: [Files]
+supported_os: [Windows]

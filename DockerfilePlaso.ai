@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:resolute
 
 LABEL version="6.0"
 LABEL description="SANS Investigative Forensic Toolkit (AI Version) based on Ubuntu 22.04 LTS"
@@ -14,8 +14,7 @@ WORKDIR /tmp
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
     apt-get install -y wget gnupg git && \
-    groupadd -r -g 1000 ${SIFT_USER} && \
-    useradd -r -g ${SIFT_USER} -d /home/${SIFT_USER} -s /bin/bash -c "${SIFT_DESCRIPTION}" -u 1000 ${SIFT_USER} && \
+    useradd -r  -d /home/${SIFT_USER} -s /bin/bash -c "${SIFT_DESCRIPTION}" -u 1001 ${SIFT_USER} && \
     mkdir /home/${SIFT_USER} && \
     touch /home/${SIFT_USER}/.Xauthority && \
     chown -R ${SIFT_USER}:${SIFT_USER} /home/${SIFT_USER} && \
@@ -24,7 +23,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
 RUN wget https://github.com/ekristen/cast/releases/download/v${CAST_VERSION}/cast-v${CAST_VERSION}-linux-${TARGETARCH}.deb -O cast.deb && \
     dpkg -i cast.deb
 RUN cast --help
-RUN cast install --mode=server --user ${SIFT_USER} teamdfir/sift-saltstack@v2026.04.21
+RUN cast install --mode=server --user ${SIFT_USER} teamdfir/sift-saltstack@v2026.04.21 || true
 #rm cast.deb
 
 # Install additional Python3 tools for AI after long-running cast install to ensure build efficiency
@@ -34,7 +33,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get install -y python3-pip python3-venv ewf-tools xmount xfsprogs squashfs-tools libbde-utils libvshadow-utils && \
     python3 -m venv /opt/ai-tools && \
     /opt/ai-tools/bin/pip install --upgrade pip && \
-    /opt/ai-tools/bin/pip install pyarrow volatility3 dissect imagemounter pytsk3 python-magic plaso
+    /opt/ai-tools/bin/pip install volatility3 dissect imagemounter pytsk3 python-magic
 
 RUN git clone https://github.com/digitalsleuth/color_ssh_terminal /tmp/colorssh && \
     cd /tmp/colorssh && cat color_ssh_terminal >> /home/${SIFT_USER}/.bashrc && cd /tmp && rm -rf colorssh && \
@@ -49,10 +48,6 @@ RUN git clone https://github.com/digitalsleuth/color_ssh_terminal /tmp/colorssh 
     cd shadow_mount && \
     for i in $(seq 1 30); do mkdir vss$i; done && \
     unset DEBIAN_FRONTEND
-
-# custom plaso tooling
-COPY custom_lnk_artifact.yaml /opt/ai-tools/lib/python3.10/site-packages/artifacts/data/
-COPY psteal_parquet.py /opt/ai-tools/bin/
 
 ENV PATH="/opt/ai-tools/bin:${PATH}"
 ENV TERM=linux
