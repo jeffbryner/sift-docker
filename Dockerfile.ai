@@ -52,8 +52,11 @@ RUN git clone https://github.com/digitalsleuth/color_ssh_terminal /tmp/colorssh 
 
 # custom plaso tooling
 COPY custom_lnk_artifact.yaml /opt/ai-tools/lib/python3.10/site-packages/artifacts/data/
+COPY psteal_filter.yaml /home/${SIFT_USER}/psteal_filter.yaml
 COPY psteal_parquet.py /opt/ai-tools/bin/
 
+# custom rdump to parquet utility for target-query
+COPY rdump_to_parquet.py /opt/ai-tools/bin/
 ENV PATH="/opt/ai-tools/bin:${PATH}"
 ENV TERM=linux
 WORKDIR /home/${SIFT_USER}

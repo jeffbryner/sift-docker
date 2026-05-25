@@ -213,11 +213,12 @@ class PstealParquetTool(psteal_tool.PstealTool):
 
         extraction_group = argument_parser.add_argument_group("extraction arguments")
 
-        # We add "artifact_filters" here to support --artifact-filters
+        # We add "artifact_filters" and "filter_file" here to support path filters
         argument_helper_names = [
             "archives",
             "artifact_filters",
             "extraction",
+            "filter_file",
             "hashers",
             "parsers",
         ]
@@ -320,9 +321,9 @@ class PstealParquetTool(psteal_tool.PstealTool):
         # Force the output format to be our parquet module
         setattr(options, "output_format", "parquet")
 
-        # Parse the artifact_filters option so self._artifact_filters is populated
+        # Parse the filter options so self._artifact_filters and self._filter_file are populated
         helpers_manager.ArgumentHelperManager.ParseOptions(
-            options, self, names=["artifact_filters"]
+            options, self, names=["artifact_filters", "filter_file"]
         )
 
         super().ParseOptions(options)

@@ -1,0 +1,25 @@
+type: include
+paths:
+# Core Registry Hives (System-wide and User-specific)
+- /Windows/System32/config/SYSTEM
+- /Windows/System32/config/SOFTWARE
+- /Windows/System32/config/SAM
+- /Windows/System32/config/Amcache.hve
+- /Users/.+/NTUSER.DAT
+- /Users/.+/AppData/Local/Microsoft/Windows/UsrClass.dat
+# Critical Event Logs
+- /Windows/System32/winevt/Logs/System.evtx
+- /Windows/System32/winevt/Logs/Security.evtx
+- /Windows/System32/winevt/Logs/Microsoft-Windows-Partition%4Diagnostic.evtx
+- /Windows/System32/winevt/Logs/Microsoft-Windows-Shell-Core%4Operational.evtx
+- /Windows/System32/winevt/Logs/Microsoft-Windows-TerminalServices-LocalSessionManager%4Operational.evtx
+- /Windows/System32/winevt/Logs/Microsoft-Windows-TerminalServices-RemoteConnectionManager%4Operational.evtx
+# Execution History
+- /Windows/Prefetch/.+\.pf
+# Shortcut & Shell Link Artifacts (LNK, Jump Lists)
+- /Users/.+/AppData/Roaming/Microsoft/Windows/Recent/.+\.lnk
+- /Users/.+/AppData/Roaming/Microsoft/Windows/Recent/AutomaticDestinations/.+
+- /Users/.+/AppData/Roaming/Microsoft/Windows/Recent/CustomDestinations/.+
+- /Users/.+/AppData/Roaming/Microsoft/Office/Recent/.+\.lnk
+# Hardware & Driver Installation Logs
+- /Windows/INF/setupapi\.dev\.log
