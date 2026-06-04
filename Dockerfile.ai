@@ -1,6 +1,6 @@
 FROM ubuntu:22.04
 
-LABEL version="6.0"
+LABEL version="7.0"
 LABEL description="SANS Investigative Forensic Toolkit (AI Version) based on Ubuntu 22.04 LTS"
 LABEL maintainer="Jeff Bryner (github.com/jeffbryner)"
 ARG CAST_VERSION=1.0.13
@@ -25,7 +25,6 @@ RUN wget https://github.com/ekristen/cast/releases/download/v${CAST_VERSION}/cas
     dpkg -i cast.deb
 RUN cast --help
 RUN cast install --mode=server --user ${SIFT_USER} teamdfir/sift-saltstack@v2026.04.21 || true
-#rm cast.deb
 
 # Install additional Python3 tools for AI after long-running cast install to ensure build efficiency
 RUN export DEBIAN_FRONTEND=noninteractive && \
@@ -36,10 +35,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     /opt/ai-tools/bin/pip install --upgrade pip && \
     /opt/ai-tools/bin/pip install pyarrow volatility3 dissect imagemounter pytsk3 python-magic plaso
 
-RUN git clone https://github.com/digitalsleuth/color_ssh_terminal /tmp/colorssh && \
-    cd /tmp/colorssh && cat color_ssh_terminal >> /home/${SIFT_USER}/.bashrc && cd /tmp && rm -rf colorssh && \
-    echo source .bashrc >> /home/${SIFT_USER}/.bash_profile && \
-    chown -R ${SIFT_USER}:${SIFT_USER} /home/${SIFT_USER} && \
+RUN chown -R ${SIFT_USER}:${SIFT_USER} /home/${SIFT_USER} && \
     apt-get autoremove -y && apt-get purge && apt-get clean && \
     rm -rf /srv && \
     rm -rf /var/cache/salt/* && \
@@ -51,7 +47,6 @@ RUN git clone https://github.com/digitalsleuth/color_ssh_terminal /tmp/colorssh 
     unset DEBIAN_FRONTEND
 
 # custom plaso tooling
-COPY custom_lnk_artifact.yaml /opt/ai-tools/lib/python3.10/site-packages/artifacts/data/
 COPY psteal_filter.yaml /home/${SIFT_USER}/psteal_filter.yaml
 COPY psteal_parquet.py /opt/ai-tools/bin/
 
@@ -60,5 +55,6 @@ COPY rdump_to_parquet.py /opt/ai-tools/bin/
 ENV PATH="/opt/ai-tools/bin:${PATH}"
 ENV TERM=linux
 WORKDIR /home/${SIFT_USER}
-
+# pcap tooling
+RUN apt-get update && apt-get install -y tshark
 CMD ["/bin/bash"]

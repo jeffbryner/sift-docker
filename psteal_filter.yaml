@@ -5,15 +5,13 @@ paths:
 - /Windows/System32/config/SOFTWARE
 - /Windows/System32/config/SAM
 - /Windows/System32/config/Amcache.hve
+- /Windows/appcompat/Programs/Amcache.hve
 - /Users/.+/NTUSER.DAT
 - /Users/.+/AppData/Local/Microsoft/Windows/UsrClass.dat
 # Critical Event Logs
 - /Windows/System32/winevt/Logs/System.evtx
 - /Windows/System32/winevt/Logs/Security.evtx
-- /Windows/System32/winevt/Logs/Microsoft-Windows-Partition%4Diagnostic.evtx
-- /Windows/System32/winevt/Logs/Microsoft-Windows-Shell-Core%4Operational.evtx
-- /Windows/System32/winevt/Logs/Microsoft-Windows-TerminalServices-LocalSessionManager%4Operational.evtx
-- /Windows/System32/winevt/Logs/Microsoft-Windows-TerminalServices-RemoteConnectionManager%4Operational.evtx
+- /Windows/System32/winevt/Logs/**/*.evtx
 # Execution History
 - /Windows/Prefetch/.+\.pf
 # Shortcut & Shell Link Artifacts (LNK, Jump Lists)
@@ -23,3 +21,7 @@ paths:
 - /Users/.+/AppData/Roaming/Microsoft/Office/Recent/.+\.lnk
 # Hardware & Driver Installation Logs
 - /Windows/INF/setupapi\.dev\.log
+# recycle bin
+- /$recycle.bin/**/.+
+# SRUM
+- /Windows/System32/srum/**/*.dat
